@@ -55,7 +55,8 @@ class _CreateUserFormState extends State<CreateUserFormScreen> {
       badge: true,
       sound: true,
     );
-    await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+    await FirebaseMessaging.instance
+        .setForegroundNotificationPresentationOptions(
       alert: false,
       badge: false,
       sound: false,
@@ -166,15 +167,14 @@ class _CreateUserFormState extends State<CreateUserFormScreen> {
                   EasyLoading.show();
                   final fcm = await FirebaseMessaging.instance.getToken();
                   final result = await LiveTalkSdk.shareInstance.createRoom(
-                    phone: _phoneController.text,
-                    fullName: _userNameController.text,
-                    uuid: _phoneController.text,
-                    autoExpired: _isAutoExpired,
-                    fcm: fcm,
-                      projectId: "omicrm-6558a"
-                  );
+                      phone: _phoneController.text,
+                      fullName: _userNameController.text,
+                      uuid: _phoneController.text,
+                      autoExpired: _isAutoExpired,
+                      fcm: fcm,
+                      projectId: "omicrm-6558a");
                   EasyLoading.dismiss();
-                  if (result != null && mounted) {
+                  if (result != null && context.mounted) {
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
@@ -185,6 +185,7 @@ class _CreateUserFormState extends State<CreateUserFormScreen> {
                 } catch (error) {
                   EasyLoading.dismiss();
                   if (error is LiveTalkError) {
+                    if (!context.mounted) return;
                     showCustomDialog(
                       context: context,
                       message: error.message["message"] as String,

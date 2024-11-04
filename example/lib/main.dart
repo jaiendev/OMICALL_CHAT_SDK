@@ -6,13 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:livetalk_sdk/livetalk_sdk.dart';
 import 'package:livetalk_sdk_example/create_user_form_screen.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import 'notification_service.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
-  print("Handling a background message: ${message.messageId}");
 }
 
 void main() async {
@@ -44,14 +42,11 @@ class _MyAppState extends State<MyApp> {
       NotificationService().showNotification(message);
     });
 
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      print('Message clicked!');
-    });
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {});
   }
 
   @override
   Widget build(BuildContext context) {
-
     return GestureDetector(
       child: MaterialApp(
         theme: ThemeData.light(),
@@ -73,10 +68,10 @@ class MyHttpOverrides extends HttpOverrides {
   HttpClient createHttpClient(SecurityContext? context) {
     return super.createHttpClient(context)
       ..badCertificateCallback = (
-          X509Certificate cert,
-          String host,
-          int port,
-          ) {
+        X509Certificate cert,
+        String host,
+        int port,
+      ) {
         return true;
       };
   }

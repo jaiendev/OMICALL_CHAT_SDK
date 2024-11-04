@@ -124,6 +124,8 @@ class ChatState extends State<ChatScreen> {
     } catch (e) {
       if (e is LiveTalkError) {
         EasyLoading.dismiss();
+        if (!context.mounted) return;
+
         showCustomDialog(
           context: context,
           message: e.message["message"],
@@ -207,13 +209,14 @@ class ChatState extends State<ChatScreen> {
                   EasyLoading.show();
                   await LiveTalkSdk.shareInstance.logout(uuid);
                   EasyLoading.dismiss();
-                  if (mounted) {
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                        builder: (context) => const CreateUserFormScreen(),
-                      ),
-                    );
-                  }
+
+                  if (!context.mounted) return;
+
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (context) => const CreateUserFormScreen(),
+                    ),
+                  );
                 },
               ),
             ),
@@ -436,6 +439,8 @@ class ChatState extends State<ChatScreen> {
                   } catch (error) {
                     EasyLoading.dismiss();
                     if (error is LiveTalkError) {
+                      if (!context.mounted) return;
+
                       showCustomDialog(
                         context: context,
                         message: error.message["message"] as String,
@@ -504,12 +509,11 @@ class ChatState extends State<ChatScreen> {
                               } catch (error) {
                                 if (error is LiveTalkError) {
                                   EasyLoading.dismiss();
-                                  if (mounted) {
-                                    showCustomDialog(
-                                      context: context,
-                                      message: error.message["message"],
-                                    );
-                                  }
+                                  if (!context.mounted) return;
+                                  showCustomDialog(
+                                    context: context,
+                                    message: error.message["message"],
+                                  );
                                 }
                               }
                             }
@@ -538,12 +542,17 @@ class ChatState extends State<ChatScreen> {
                               } catch (error) {
                                 if (error is LiveTalkError) {
                                   EasyLoading.dismiss();
-                                  if (mounted) {
-                                    showCustomDialog(
-                                      context: context,
-                                      message: error.message["message"],
-                                    );
-                                  }
+
+                                  if (!context.mounted) return;
+
+                                  showCustomDialog(
+                                    context: context,
+                                    message: error.message["message"],
+                                  );
+                                }
+                              } finally {
+                                if (mounted) {
+                                  EasyLoading.dismiss();
                                 }
                               }
                             }
@@ -611,6 +620,7 @@ class ChatState extends State<ChatScreen> {
                   } catch (error) {
                     EasyLoading.dismiss();
                     if (error is LiveTalkError) {
+                      if (!context.mounted) return;
                       showCustomDialog(
                         context: context,
                         message: error.message["message"] as String,
